@@ -2,7 +2,7 @@
 // Database configuration
 define('DB_SERVER', 'localhost');
 define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'P@ssw0rd!2024#Secure'); // Use the root password you set during installation
+define('DB_PASSWORD', ''); //
 define('DB_NAME', 'instagram_clone');
 
 // Create connection

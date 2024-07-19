@@ -18,7 +18,7 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profile.css">
 </head>
 <body>
     <div class="container">
@@ -48,4 +48,26 @@ if ($result->num_rows > 0) {
         </div>
         <div class="profile-posts">
             <p class="no-posts">No posts yet</p>
-        </
+        </div>
+    </div>
+
+    <!-- Modal for Editing Profile -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="editProfileForm" action="edit-profile.php" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
+                
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio"><?php echo htmlspecialchars($user['bio']); ?></textarea>
+                
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
