@@ -1,0 +1,24 @@
+# Ignore configuration files
+config/db_config.php
+
+# Ignore environment files
+.env
+
+# Ignore compiled binary files
+*.class
+*.exe
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore node_modules and vendor directories
+node_modules/
+vendor/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
