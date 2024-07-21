@@ -134,12 +134,10 @@ if ($username !== $_SESSION['username']) {
                         <div class="post">
                             <div class="post-image-container">
                                 <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
-                                <?php if ($username !== $_SESSION['username']): // Show Follow/Unfollow button for other users ?>
-                                    <form id="followForm" action="follow.php" method="POST">
-                                        <input type="hidden" name="followed_id" value="<?php echo $user['id']; ?>">
-                                        <button type="submit" name="action" value="<?php echo $isFollowing ? 'unfollow' : 'follow'; ?>" class="action-btn">
-                                            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-                                        </button>
+                                <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
+                                    <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                        <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
                                     </form>
                                 <?php endif; ?>
                             </div>
