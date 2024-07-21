@@ -1,4 +1,3 @@
-// Existing script
 document.addEventListener("DOMContentLoaded", function() {
     var editProfileBtn = document.getElementById("editProfileBtn");
     var editProfileModal = document.getElementById("editProfileModal");
