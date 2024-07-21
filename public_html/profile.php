@@ -7,8 +7,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-// Retrieve the username from the session
-$username = $_SESSION['username'];
+// Retrieve the username from the query parameter or session
+$username = isset($_GET['username']) ? $_GET['username'] : $_SESSION['username'];
 
 // Fetch user data from the database
 include_once 'includes/db_config.php';
@@ -68,7 +68,9 @@ $post_count = count($posts);
             <div class="profile-info">
                 <h1 class="username"><?php echo htmlspecialchars($user['username']); ?></h1>
                 <p class="bio">Bio: <?php echo htmlspecialchars($user['bio']); ?></p>
-                <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                <?php if ($username === $_SESSION['username']): // Show Edit Profile button only for the logged-in user ?>
+                    <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                <?php endif; ?>
             </div>
         </header>
         <div class="profile-stats">
@@ -95,11 +97,19 @@ $post_count = count($posts);
                         <div class="post">
                             <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
                             <p><?php echo htmlspecialchars($post['caption']); ?></p>
+                            <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
+                                <form action="delete_post.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                    <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                    <button type="submit" class="delete-post-btn">Delete</button>
+                                </form>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <button class="action-btn" id="createPostBtn">Create Post</button>
+            <?php if ($username === $_SESSION['username']): // Show Create Post button only for the logged-in user ?>
+                <button class="action-btn" id="createPostBtn">Create Post</button>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -110,33 +120,4 @@ $post_count = count($posts);
             <h2>Edit Profile</h2>
             <form id="editProfileForm" action="edit_profile.php" method="POST" enctype="multipart/form-data">
                 <label for="bio">Bio:</label>
-                <textarea id="bio" name="bio"><?php echo htmlspecialchars($user['bio']); ?></textarea>
-
-                <label for="profile_pic">Profile Picture:</label>
-                <input type="file" id="profile_pic" name="profile_pic">
-                
-                <button type="submit">Save Changes</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal for Creating Post -->
-    <div id="createPostModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="closePostModal">&times;</span>
-            <h2>Create Post</h2>
-            <form id="createPostForm" action="create_post.php" method="POST" enctype="multipart/form-data">
-                <label for="postImage">Image:</label>
-                <input type="file" id="postImage" name="postImage" accept="image/*" required>
-                
-                <label for="caption">Caption:</label>
-                <textarea id="caption" name="caption"></textarea>
-                
-                <button type="submit">Post</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="js/profile.js"></script>
-</body>
-</html>
+     
