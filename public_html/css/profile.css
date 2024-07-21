@@ -1,13 +1,20 @@
+/* Profile Page CSS */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
     width: 50%;
-    margin: 50px auto;
+    max-width: 800px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -51,7 +58,7 @@ body {
 
 .profile-stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin: 20px 0;
 }
 
@@ -90,7 +97,8 @@ body {
     margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 80%;
+    max-width: 500px;
 }
 
 .close-btn {
@@ -105,4 +113,53 @@ body {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+.profile-actions {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.action-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.action-btn:hover {
+    background-color: #0056b3;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.nav-buttons a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+.nav-buttons a:hover {
+    color: #0095f6;
+}
+
+.post-box {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fafafa;
 }
