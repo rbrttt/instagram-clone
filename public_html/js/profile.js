@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var editProfileBtn = document.getElementById("editProfileBtn");
     var editProfileModal = document.getElementById("editProfileModal");
     var closeModal = document.getElementById("closeModal");
-
     var createPostBtn = document.getElementById("createPostBtn");
     var createPostModal = document.getElementById("createPostModal");
     var closePostModal = document.getElementById("closePostModal");

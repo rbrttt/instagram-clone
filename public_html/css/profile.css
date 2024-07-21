@@ -10,6 +10,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* Prevent scrolling */
 }
 
 .container {
@@ -19,6 +20,7 @@ body {
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    overflow-y: auto; /* Enable scrolling within the container if needed */
 }
 
 .profile-header {
@@ -144,12 +146,14 @@ body {
     top: 0;
     left: 0;
     right: 0;
+    box-sizing: border-box; /* Ensure padding is included in the total width */
 }
 
 .nav-buttons a {
     color: #333;
     text-decoration: none;
     font-size: 1.2em;
+    white-space: nowrap; /* Prevent text from wrapping */
 }
 
 .nav-buttons a:hover {
@@ -162,4 +166,41 @@ body {
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #fafafa;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.post {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.post img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.post p {
+    padding: 10px;
+    margin: 0;
+}
+
+#closePostModal {
+    cursor: pointer;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+#closePostModal:hover {
+    color: #000;
 }

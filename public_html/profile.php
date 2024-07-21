@@ -2,7 +2,7 @@
 session_start(); // Start the session
 
 // Check if the user is logged in, if not then redirect to login page
-if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: index.php");
     exit;
 }
@@ -24,12 +24,26 @@ $user = $result->fetch_assoc();
 // Check if user data was found
 if ($user) {
     $bio = $user['bio'];
-    $profilePic = $user['profile_pic'] ?? 'images/default-profile-pic.jpg';
+    $profilePic = !empty($user['profile_pic']) ? $user['profile_pic'] : 'images/default-profile-pic.jpg';
 } else {
     // Handle the case where user data is not found
     $bio = "No bio available.";
     $profilePic = 'images/default-profile-pic.jpg';
 }
+
+// Fetch user posts from the database
+$query = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$posts = [];
+while ($row = $result->fetch_assoc()) {
+    $posts[] = $row;
+}
+
+// Get the number of posts
+$post_count = count($posts);
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +73,7 @@ if ($user) {
         </header>
         <div class="profile-stats">
             <div class="stat">
-                <span class="number">0</span>
+                <span class="number"><?php echo $post_count; ?></span>
                 <span class="label">Posts</span>
             </div>
             <div class="stat">
@@ -73,10 +87,19 @@ if ($user) {
         </div>
         <hr>
         <div class="profile-posts">
-            <div class="post-box">
+            <?php if (empty($posts)): ?>
                 <p class="no-posts">No posts yet</p>
-                <button class="action-btn" id="createPostBtn">Create Post</button>
-            </div>
+            <?php else: ?>
+                <div class="post-grid">
+                    <?php foreach ($posts as $post): ?>
+                        <div class="post">
+                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
+                            <p><?php echo htmlspecialchars($post['caption']); ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <button class="action-btn" id="createPostBtn">Create Post</button>
         </div>
     </div>
 
@@ -103,11 +126,11 @@ if ($user) {
             <span class="close-btn" id="closePostModal">&times;</span>
             <h2>Create Post</h2>
             <form id="createPostForm" action="create_post.php" method="POST" enctype="multipart/form-data">
-                <label for="post_content">Content:</label>
-                <textarea id="post_content" name="post_content" required></textarea>
+                <label for="postImage">Image:</label>
+                <input type="file" id="postImage" name="postImage" accept="image/*" required>
                 
-                <label for="post_image">Image:</label>
-                <input type="file" id="post_image" name="post_image">
+                <label for="caption">Caption:</label>
+                <textarea id="caption" name="caption"></textarea>
                 
                 <button type="submit">Post</button>
             </form>
