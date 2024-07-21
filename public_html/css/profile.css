@@ -205,3 +205,29 @@ body {
     cursor: pointer;
     font-size: 1.2em;
 }
+
+
+.post-image-container {
+    position: relative;
+}
+
+/* Delete post button */
+.delete-post-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+}
+
+/* Show delete button on hover */
+.post-image-container:hover .delete-post-form {
+    display: block;
+}
+
+.delete-post-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 20px;
+}
