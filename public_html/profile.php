@@ -27,8 +27,9 @@ if ($user) {
     $profilePic = !empty($user['profile_pic']) ? $user['profile_pic'] : 'images/default-profile-pic.jpg';
 } else {
     // Handle the case where user data is not found
-    $bio = "No bio available.";
-    $profilePic = 'images/default-profile-pic.jpg';
+    $_SESSION['message'] = "User not found.";
+    header("location: dashboard.php");
+    exit;
 }
 
 // Fetch user posts from the database
@@ -44,6 +45,35 @@ while ($row = $result->fetch_assoc()) {
 
 // Get the number of posts
 $post_count = count($posts);
+
+// Fetch follower and following counts for the profile being viewed
+$query = "SELECT COUNT(*) as count FROM followers WHERE followed_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$follower_count = $result->fetch_assoc()['count'];
+
+$query = "SELECT COUNT(*) as count FROM followers WHERE follower_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$following_count = $result->fetch_assoc()['count'];
+
+// Check if the logged-in user is following this profile
+$isFollowing = false;
+if ($username !== $_SESSION['username']) {
+    $loggedInUserId = $_SESSION['user_id'];
+    $query = "SELECT * FROM followers WHERE follower_id = ? AND followed_id = ?";
+    $stmt->prepare($query);
+    $stmt->bind_param("ii", $loggedInUserId, $user['id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $isFollowing = true;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +100,13 @@ $post_count = count($posts);
                 <p class="bio">Bio: <?php echo htmlspecialchars($user['bio']); ?></p>
                 <?php if ($username === $_SESSION['username']): // Show Edit Profile button only for the logged-in user ?>
                     <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                <?php else: // Show Follow/Unfollow button for other users ?>
+                    <form id="followForm" method="POST">
+                        <input type="hidden" name="followed_id" value="<?php echo $user['id']; ?>">
+                        <button type="submit" name="action" value="<?php echo $isFollowing ? 'unfollow' : 'follow'; ?>" class="action-btn">
+                            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                        </button>
+                    </form>
                 <?php endif; ?>
             </div>
         </header>
@@ -79,11 +116,11 @@ $post_count = count($posts);
                 <span class="label">Posts</span>
             </div>
             <div class="stat">
-                <span class="number">0</span>
+                <span class="number"><?php echo $follower_count; ?></span>
                 <span class="label">Followers</span>
             </div>
             <div class="stat">
-                <span class="number">0</span>
+                <span class="number"><?php echo $following_count; ?></span>
                 <span class="label">Following</span>
             </div>
         </div>
@@ -97,10 +134,12 @@ $post_count = count($posts);
                         <div class="post">
                             <div class="post-image-container">
                                 <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
-                                <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
-                                    <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                                        <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
+                                <?php if ($username !== $_SESSION['username']): // Show Follow/Unfollow button for other users ?>
+                                    <form id="followForm" action="follow.php" method="POST">
+                                        <input type="hidden" name="followed_id" value="<?php echo $user['id']; ?>">
+                                        <button type="submit" name="action" value="<?php echo $isFollowing ? 'unfollow' : 'follow'; ?>" class="action-btn">
+                                            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                                        </button>
                                     </form>
                                 <?php endif; ?>
                             </div>
