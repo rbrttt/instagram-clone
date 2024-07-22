@@ -1,5 +1,5 @@
 # Ignore configuration files
-config/db_config.php
+includes/db_config.php
 
 # Ignore environment files
 .env
