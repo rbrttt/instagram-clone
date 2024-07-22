@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 $username = isset($_GET['username']) ? $_GET['username'] : $_SESSION['username'];
 
 // Fetch user data from the database
-include_once 'includes/db_config.php';
+include_once '../config/db_config.php';
 $conn = connect_db();
 
 $query = "SELECT * FROM users WHERE username = ?";

@@ -1,6 +1,6 @@
 <?php 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include '../Includes/db.php';
+    include '../config/db_config.php';
     $conn = connect_db();
     $email = $_POST['email'];
     $token = bin2hex(random_bytes(50));
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 $pageTitle = 'Forgot Password'; 
-include '../Includes/header.php';  
+include 'header.php';  
 ?>
 <div class="signup-container">
     <div class="signup-form">
@@ -73,4 +73,4 @@ include '../Includes/header.php';
     });
 </script>
 
-<?php include '../Includes/footer.php'; ?>
+<?php include 'footer.php'; ?>

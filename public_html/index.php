@@ -1,10 +1,10 @@
 <?php 
 $pageTitle = 'Login'; 
-include 'includes/header.php';
+include 'header.php';
 
 session_start();  // Start the session at the beginning
 
-include_once 'includes/auth.php';
+include_once '../config/auth.php';
 
 // Display the success message if it's set
 if (isset($_SESSION['message'])) {
@@ -58,4 +58,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<?php include 'includes/footer.php';?>
+<?php include 'footer.php';?>
