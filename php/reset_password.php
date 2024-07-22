@@ -1,7 +1,7 @@
 <?php
-include '../Includes/db.php';
+include '../config/db_config.php';
 $pageTitle = 'Reset Password'; 
-include '../Includes/header.php';  
+include '../config/header.php';  
 $conn = connect_db();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

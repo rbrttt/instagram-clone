@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Contact Us';
-include '../Includes/header.php'; 
+include '../config/header.php'; 
 ?>
 <div class="signup-container">
     <div class="signup-form">

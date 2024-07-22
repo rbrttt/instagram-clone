@@ -14,7 +14,7 @@ if (!isset($_POST['followed_id']) || !isset($_POST['action'])) {
     exit;
 }
 
-include_once 'includes/db_config.php';
+include_once '../config/db_config.php';
 $conn = connect_db();
 
 $follower_id = $_SESSION['user_id'];

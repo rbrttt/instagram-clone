@@ -2,8 +2,8 @@
 
 session_start(); // Start session
 $pageTitle = 'Signup'; 
-include 'includes/header.php';  
-include_once 'includes/auth.php';
+include 'header.php';  
+include_once '../config/auth.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = register($_POST['fullname'], $_POST['username'], $_POST['password'], $_POST['email']);
