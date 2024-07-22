@@ -73,4 +73,4 @@ include 'header.php';
     });
 </script>
 
-<?php include '../Includes/footer.php'; ?>
+<?php include 'footer.php'; ?>
