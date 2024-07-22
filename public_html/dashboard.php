@@ -24,19 +24,21 @@ $result = $conn->query($query);
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
-    <p>This is your dashboard.</p>
-    <button onclick="window.location.href='profile.php'">View Profile</button>
-    <button onclick="window.location.href='logout.php'">Logout</button>
-    
-    <h2>Other Users:</h2>
-    <ul>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <li><a href="profile.php?username=<?php echo urlencode($row['username']); ?>"><?php echo htmlspecialchars($row['username']); ?></a></li>
-        <?php endwhile; ?>
-    </ul>
+    <div class="container">
+        <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
+        <p>This is your dashboard.</p>
+        <button onclick="window.location.href='profile.php'">View Profile</button>
+        <button onclick="window.location.href='logout.php'">Logout</button>
+        
+        <h2>Other Users:</h2>
+        <ul>
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <li><a href="profile.php?username=<?php echo urlencode($row['username']); ?>"><?php echo htmlspecialchars($row['username']); ?></a></li>
+            <?php endwhile; ?>
+        </ul>
+    </div>
 </body>
 </html>
