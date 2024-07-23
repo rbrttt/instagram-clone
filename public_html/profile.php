@@ -88,7 +88,7 @@ if ($username !== $_SESSION['username']) {
 <body>
     <div class="nav-buttons">
         <a href="dashboard.php">&lt; Dashboard</a>
-        <a href="#" id="directMessagesBtn"><i class="fas fa-comments"></i> Direct Messages</a>
+        <a href="direct_messages.php" id="directMessagesBtn"><i class="fas fa-comments"></i> Direct Messages</a>
     </div>
     <div class="container">
         <header class="profile-header">

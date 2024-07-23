@@ -1,0 +1,105 @@
+/* sidebar.css */
+
+body {
+    font-family: "Lato", sans-serif;
+    background-color: #fafafa;
+    overflow: hidden; /* Prevent body from scrolling */
+}
+
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #333;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #f1f1f1;
+    color: #000;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1100;
+    margin-right: 10px; /* Add some margin to avoid overlap */
+}
+
+.openbtn:hover {
+    background-color: #f0f0f0;
+}
+
+.openbtn .bar1, .openbtn .bar2, .openbtn .bar3 {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+#main {
+    height: 100vh; /* Ensure main takes full viewport height */
+    overflow: hidden; /* Prevent scrolling within main */
+    transition: margin-left .5s;
+    padding: 16px;
+    margin-left: 0; /* Start with no margin */
+}
+
+hr {
+    border: 0.5px solid #ccc;
+    margin: 20px 0;
+}
+
+.logout {
+    color: white;
+    background-color: red;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.logout:hover {
+    background-color: #d00;
+}
+
+.divider {
+    border-top: 1px solid #ccc;
+    margin: 20px 0;
+}
+
+@media screen and (max-height: 450px) {
+    .sidebar {padding-top: 15px;}
+    .sidebar a {font-size: 18px;}
+}

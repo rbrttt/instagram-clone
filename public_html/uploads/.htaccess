@@ -1,7 +1,7 @@
 # Deny access to all files in this directory
 deny from all
 
-# Allow access to specific file types if necessary
-<FilesMatch "\.(jpg|png|gif|jpeg)$">
+# Allow access to specific image file types
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
     Allow from all
 </FilesMatch>
