@@ -1,83 +1,11 @@
-
-/*error message  */
-.error-message {
-    color: white; 
-    font-weight: bold;
-    padding: 50px;
-    border: 2px solid darkred; 
-    background-color: red; 
-    border-radius: 10px; 
-    text-align: center;
-    width: 50%; 
-    box-shadow: 0px 8px 15px rgba(204, 36, 36, 0.1); 
-    transition: all 0.3s ease-in-out; 
-    position: absolute; 
-    top: 0; 
-    left: 25%; 
-    z-index: 1; 
-}
-
-/*success message */
-.success-message {
-    color: white; 
-    font-weight: bold;
-    padding: 20px;
-    border: 2px solid limegreen; 
-    background-color: darkgreen; 
-    border-radius: 10px; 
-    text-align: center;
-    width: 80%; 
-    max-width: 600px; /* for large screen */
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); 
-    transition: all 0.3s ease-in-out; 
-    position: absolute;
-    top: 20px; 
-    left: 50%; 
-    transform: translateX(-50%); /*Centered horizontally  */
-    z-index: 1; 
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
-}
-
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-
-
-
-/* Style for error message  when email is not found at forgot_password.php*/
-.forgot-password-error-message {
-    color: #ff0000; 
-    background-color: #ffe6e6; 
-    border: 1px solid #ff0000; 
-    padding: 10px; 
-    margin: 10px 0; 
-    border-radius: 5px; 
-}
-
-/* Style for success message  when email is found at forgot_password.php*/ 
-.forgot-password-success-message {
-    color: #008000; 
-    background-color: #e6ffe6; 
-    border: 1px solid #008000; 
-    padding: 10px; 
-    margin: 10px 0; 
-    border-radius: 5px; 
-}
-
-
-/* 
-Style for login.php or login.html
-*/
+/* General styles */
 body {
     background: url('../background.jpg') no-repeat center center fixed;
     background-size: cover;
     font-family: 'Arial', sans-serif;
-    background-color: #ebdcdc;
+    background-color: #fafafa;
+    margin: 0;
+    padding: 0;
 }
 
 .signup-container {
@@ -88,27 +16,37 @@ body {
 }
 
 .signup-form {
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    background: #fff;
+    padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
     width: 100%;
+    text-align: center;
 }
 
 .signup-form h2 {
-    text-align: center;
+    font-family: 'Grand Hotel', cursive;
+    color: #262626;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.signup-form p {
+    color: #8e8e8e;
     margin-bottom: 20px;
 }
 
 .input-group {
     margin-bottom: 15px;
     position: relative;
+    text-align: left;
 }
 
 .input-group label {
     display: block;
     margin-bottom: 5px;
+    color: #262626;
 }
 
 .input-group input[type="text"],
@@ -116,16 +54,18 @@ body {
 .input-group input[type="email"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
     box-sizing: border-box;
+    background: #fafafa;
 }
 
 .input-group input[type="text"]:focus,
 .input-group input[type="password"]:focus,
 .input-group input[type="email"]:focus {
-    border-color: #007bff;
+    border-color: #b2b2b2;
     outline: none;
+    background: #fff;
 }
 
 .toggle-password {
@@ -133,7 +73,7 @@ body {
     top: 38px;
     right: 10px;
     cursor: pointer;
-    color: #007bff;
+    color: #0095f6;
     user-select: none;
 }
 
@@ -149,16 +89,16 @@ body {
 .input-group button {
     width: 100%;
     padding: 10px;
-    background: #007bff;
+    background: #0095f6;
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     color: white;
     font-size: 16px;
     cursor: pointer;
 }
 
 .input-group button:hover {
-    background: #0056b3;
+    background: #007bb5;
 }
 
 .input-group .forgot-password,
@@ -169,11 +109,66 @@ body {
 
 .input-group .forgot-password a,
 .input-group p a {
-    color: #007bff;
+    color: #0095f6;
     text-decoration: none;
 }
 
 .input-group .forgot-password a:hover,
 .input-group p a:hover {
     text-decoration: underline;
+}
+
+.error-message,
+.success-message {
+    color: white; 
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px; 
+    text-align: center;
+    width: 80%; 
+    max-width: 600px; /* for large screen */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); 
+    transition: all 0.3s ease-in-out; 
+    position: absolute;
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); /*Centered horizontally  */
+    z-index: 1; 
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.error-message {
+    background-color: #ed4956; 
+    border: 2px solid #ed4956; 
+}
+
+.success-message {
+    background-color: #78c800; 
+    border: 2px solid #78c800; 
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Styles for forgot password messages */
+.forgot-password-error-message {
+    color: #ff0000; 
+    background-color: #ffe6e6; 
+    border: 1px solid #ff0000; 
+    padding: 10px; 
+    margin: 10px 0; 
+    border-radius: 5px; 
+}
+
+.forgot-password-success-message {
+    color: #008000; 
+    background-color: #e6ffe6; 
+    border: 1px solid #008000; 
+    padding: 10px; 
+    margin: 10px 0; 
+    border-radius: 5px; 
 }
