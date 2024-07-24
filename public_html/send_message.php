@@ -1,7 +1,5 @@
 <?php
-session_start();
-
-include_once '../config/db_config.php';
+include 'common.php';  // Include the common functions and configuration
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("HTTP/1.1 403 Forbidden");
@@ -20,28 +18,15 @@ if (!$receiver_id || empty($message)) {
 
 $user_id = $_SESSION['user_id'];
 
-$conn = connect_db();
+$messageObject = new Message();
 
 // Verify if the user is allowed to send messages to the receiver
-$query = "SELECT * FROM followers WHERE follower_id = ? AND followed_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("ii", $user_id, $receiver_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
+if (!$messageObject->isAllowedToMessage($user_id, $receiver_id)) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized action.']);
     exit;
 }
 
-$query = "INSERT INTO messages (sender_id, receiver_id, message, created_at) VALUES (?, ?, ?, NOW())";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("iis", $user_id, $receiver_id, $message);
-$stmt->execute();
+$response = $messageObject->sendMessage($user_id, $receiver_id, $message);
 
-if ($stmt->affected_rows > 0) {
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Failed to send message.']);
-}
+echo json_encode($response);
 ?>

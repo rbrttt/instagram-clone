@@ -1,6 +1,5 @@
 <?php
-session_start();
-include '../config/db_config.php';
+include 'common.php';  // Include the common functions and configuration
 
 // Check if the user is logged in
 if (!isset($_SESSION['username'])) {
@@ -8,70 +7,38 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// Retrieve the user ID from the database using the session username
+// Create User and Post instances
+$user = new User();
+$post = new Post();
+$imageUpload = new ImageUpload();
+
+// Retrieve the user ID from the session
 $username = $_SESSION['username'];
-$conn = connect_db();
-$query = "SELECT id FROM users WHERE username = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-$user_id = $user['id'];
+$userData = $user->getUserDataByUsername($username);
+$user_id = $userData['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $caption = $_POST['caption'];
+    $caption = sanitize_input($_POST['caption']);
 
     // Handle image upload
     if (!empty($_FILES['postImage']['name'])) {
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($_FILES["postImage"]["name"]);
-        $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        // Check if image file is a actual image or fake image
-        $check = getimagesize($_FILES["postImage"]["tmp_name"]);
-        if ($check !== false) {
-            $uploadOk = 1;
+        $image = $imageUpload->handleProfilePictureUpload($_FILES['postImage']);
+        if (strpos($image, "Sorry") === false) {
+            // If the upload was successful, create the post
+            $message = $post->createPost($user_id, $caption, $image);
         } else {
-            $_SESSION['message'] = "File is not an image.";
-            $uploadOk = 0;
+            // If there was an error with the upload, set the error message
+            $_SESSION['message'] = $image;
+            header('Location: profile.php');
+            exit;
         }
-
-        // Check file size
-        if ($_FILES["postImage"]["size"] > 500000) {
-            $_SESSION['message'] = "Sorry, your file is too large.";
-            $uploadOk = 0;
-        }
-
-        // Allow certain file formats
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif") {
-            $_SESSION['message'] = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $uploadOk = 0;
-        }
-
-        // Check if $uploadOk is set to 0 by an error
-        if ($uploadOk == 0) {
-            $_SESSION['message'] = "Sorry, your file was not uploaded.";
-        // if everything is ok, try to upload file
-        } else {
-            if (move_uploaded_file($_FILES["postImage"]["tmp_name"], $target_file)) {
-                // Insert post into database
-                $stmt = $conn->prepare("INSERT INTO posts (user_id, image, caption) VALUES (?, ?, ?)");
-                $stmt->bind_param("iss", $user_id, $target_file, $caption);
-
-                if ($stmt->execute()) {
-                    $_SESSION['message'] = "Post created successfully!";
-                } else {
-                    $_SESSION['message'] = "Error creating post: " . $stmt->error;
-                }
-            } else {
-                $_SESSION['message'] = "Sorry, there was an error uploading your file.";
-            }
-        }
+    } else {
+        $_SESSION['message'] = "No image uploaded.";
+        header('Location: profile.php');
+        exit;
     }
 
+    $_SESSION['message'] = $message;
     header('Location: profile.php');
     exit;
 }

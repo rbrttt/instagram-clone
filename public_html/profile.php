@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+include 'common.php';  // Include the common functions and configuration
 
 // Check if the user is logged in, if not then redirect to login page
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -10,16 +10,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 // Retrieve the username from the query parameter or session
 $username = isset($_GET['username']) ? $_GET['username'] : $_SESSION['username'];
 
-// Fetch user data from the database
-include_once '../config/db_config.php';
-$conn = connect_db();
+// Initialize User object
+$userObject = new User();
 
-$query = "SELECT * FROM users WHERE username = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
+// Fetch user data
+$user = $userObject->getUserDataByUsername($username);
 
 // Check if user data was found
 if ($user) {
@@ -32,47 +27,22 @@ if ($user) {
     exit;
 }
 
-// Fetch user posts from the database
-$query = "SELECT * FROM posts WHERE user_id = ? ORDER BY created_at DESC";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user['id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$posts = [];
-while ($row = $result->fetch_assoc()) {
-    $posts[] = $row;
-}
+// Fetch user posts
+$postObject = new Post();
+$posts = $postObject->getUserPosts($user['id']);
 
 // Get the number of posts
 $post_count = count($posts);
 
 // Fetch follower and following counts for the profile being viewed
-$query = "SELECT COUNT(*) as count FROM followers WHERE followed_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user['id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$follower_count = $result->fetch_assoc()['count'];
-
-$query = "SELECT COUNT(*) as count FROM followers WHERE follower_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user['id']);
-$stmt->execute();
-$result = $stmt->get_result();
-$following_count = $result->fetch_assoc()['count'];
+$follower_count = $userObject->getFollowerCount($user['id']);
+$following_count = $userObject->getFollowingCount($user['id']);
 
 // Check if the logged-in user is following this profile
 $isFollowing = false;
 if ($username !== $_SESSION['username']) {
     $loggedInUserId = $_SESSION['user_id'];
-    $query = "SELECT * FROM followers WHERE follower_id = ? AND followed_id = ?";
-    $stmt->prepare($query);
-    $stmt->bind_param("ii", $loggedInUserId, $user['id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $isFollowing = true;
-    }
+    $isFollowing = $userObject->isFollowing($loggedInUserId, $user['id']);
 }
 ?>
 
