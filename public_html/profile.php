@@ -83,72 +83,81 @@ if ($username !== $_SESSION['username']) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 </head>
 <body>
-    <div class="nav-buttons">
-        <a href="dashboard.php">&lt; Dashboard</a>
-        <a href="direct_messages.php" id="directMessagesBtn"><i class="fas fa-comments"></i> Direct Messages</a>
-    </div>
-    <div class="container">
-        <header class="profile-header">
-            <div class="profile-picture">
-                <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Profile Picture">
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">☰</button>
+        <div class="sidebar" id="mySidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+            <a href="profile.php">View Profile</a>
+            <a href="dashboard.php">Dashboard</a>
+            <a href="direct_messages.php">Direct Messages</a>
+            <div class="divider"></div>
+            <a href="logout.php" class="logout">Logout</a>
+        </div>
+
+        <div class="container">
+            <header class="profile-header">
+                <div class="profile-picture">
+                    <img src="<?php echo htmlspecialchars($profilePic); ?>" alt="Profile Picture">
+                </div>
+                <div class="profile-info">
+                    <h1 class="username"><?php echo htmlspecialchars($user['username']); ?></h1>
+                    <p class="bio">Bio: <?php echo htmlspecialchars($user['bio']); ?></p>
+                    <?php if ($username === $_SESSION['username']): // Show Edit Profile button only for the logged-in user ?>
+                        <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
+                    <?php else: // Show Follow/Unfollow button for other users ?>
+                        <form id="followForm" method="POST">
+                            <input type="hidden" name="followed_id" value="<?php echo $user['id']; ?>">
+                            <button type="submit" name="action" value="<?php echo $isFollowing ? 'unfollow' : 'follow'; ?>" class="action-btn">
+                                <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </header>
+            <div class="profile-stats">
+                <div class="stat">
+                    <span class="number"><?php echo $post_count; ?></span>
+                    <span class="label">Posts</span>
+                </div>
+                <div class="stat">
+                    <span class="number"><?php echo $follower_count; ?></span>
+                    <span class="label">Followers</span>
+                </div>
+                <div class="stat">
+                    <span class="number"><?php echo $following_count; ?></span>
+                    <span class="label">Following</span>
+                </div>
             </div>
-            <div class="profile-info">
-                <h1 class="username"><?php echo htmlspecialchars($user['username']); ?></h1>
-                <p class="bio">Bio: <?php echo htmlspecialchars($user['bio']); ?></p>
-                <?php if ($username === $_SESSION['username']): // Show Edit Profile button only for the logged-in user ?>
-                    <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
-                <?php else: // Show Follow/Unfollow button for other users ?>
-                    <form id="followForm" method="POST">
-                        <input type="hidden" name="followed_id" value="<?php echo $user['id']; ?>">
-                        <button type="submit" name="action" value="<?php echo $isFollowing ? 'unfollow' : 'follow'; ?>" class="action-btn">
-                            <?php echo $isFollowing ? 'Unfollow' : 'Follow'; ?>
-                        </button>
-                    </form>
+            <hr>
+            <div class="profile-posts">
+                <?php if (empty($posts)): ?>
+                    <p class="no-posts">No posts yet</p>
+                <?php else: ?>
+                    <div class="post-grid">
+                        <?php foreach ($posts as $post): ?>
+                            <div class="post">
+                                <div class="post-image-container">
+                                    <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
+                                    <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
+                                        <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                            <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                                <p><?php echo htmlspecialchars($post['caption']); ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($username === $_SESSION['username']): // Show Create Post button only for the logged-in user ?>
+                    <button class="action-btn" id="createPostBtn">Create Post</button>
                 <?php endif; ?>
             </div>
-        </header>
-        <div class="profile-stats">
-            <div class="stat">
-                <span class="number"><?php echo $post_count; ?></span>
-                <span class="label">Posts</span>
-            </div>
-            <div class="stat">
-                <span class="number"><?php echo $follower_count; ?></span>
-                <span class="label">Followers</span>
-            </div>
-            <div class="stat">
-                <span class="number"><?php echo $following_count; ?></span>
-                <span class="label">Following</span>
-            </div>
-        </div>
-        <hr>
-        <div class="profile-posts">
-            <?php if (empty($posts)): ?>
-                <p class="no-posts">No posts yet</p>
-            <?php else: ?>
-                <div class="post-grid">
-                    <?php foreach ($posts as $post): ?>
-                        <div class="post">
-                            <div class="post-image-container">
-                                <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
-                                <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
-                                    <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                        <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                                        <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
-                                    </form>
-                                <?php endif; ?>
-                            </div>
-                            <p><?php echo htmlspecialchars($post['caption']); ?></p>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-            <?php if ($username === $_SESSION['username']): // Show Create Post button only for the logged-in user ?>
-                <button class="action-btn" id="createPostBtn">Create Post</button>
-            <?php endif; ?>
         </div>
     </div>
 
@@ -187,5 +196,6 @@ if ($username !== $_SESSION['username']) {
     </div>
 
     <script src="js/profile.js"></script>
+    <script src="js/sidebar.js"></script>
 </body>
 </html>
