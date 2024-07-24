@@ -12,8 +12,8 @@ body {
 }
 
 .container {
-    width: 50%;
-    max-width: 800px;
+    width: 80%; /* Increased width for more space */
+    max-width: 1200px; /* Increased max-width */
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -167,23 +167,22 @@ body {
 }
 
 .post-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Grid with 3 columns */
+    gap: 20px; /* Adjust gap as needed */
 }
 
 .post {
     position: relative;
-    width: 30%;
     background-color: #f9f9f9;
-    padding: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 .post img {
     width: 100%;
+    height: 200px; /* Fixed height for images */
+    object-fit: cover;
     border-radius: 10px;
 }
 
@@ -205,7 +204,6 @@ body {
     cursor: pointer;
     font-size: 1.2em;
 }
-
 
 .post-image-container {
     position: relative;
