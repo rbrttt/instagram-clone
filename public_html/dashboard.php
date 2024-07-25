@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+include 'common.php';  // Include the common functions and configuration
 
 // Check if the user is logged in, if not then redirect to login page
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -10,12 +10,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 // Retrieve the username from the session
 $username = $_SESSION['username'];
 
-// Fetch user data from the database
-include_once '../config/db_config.php';
-$conn = connect_db();
+// Create a User instance
+$user = new User();
 
-$query = "SELECT username FROM users";
-$result = $conn->query($query);
+// Fetch all users from the database
+$users = $user->getAllUsers();
 
 ?>
 
@@ -35,9 +34,9 @@ $result = $conn->query($query);
         
         <h2>Other Users:</h2>
         <ul>
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <li><a href="profile.php?username=<?php echo urlencode($row['username']); ?>"><?php echo htmlspecialchars($row['username']); ?></a></li>
-            <?php endwhile; ?>
+            <?php foreach ($users as $user): ?>
+                <li><a href="profile.php?username=<?php echo urlencode($user['username']); ?>"><?php echo htmlspecialchars($user['username']); ?></a></li>
+            <?php endforeach; ?>
         </ul>
     </div>
 </body>

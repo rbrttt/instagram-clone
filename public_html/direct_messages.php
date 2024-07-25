@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session
+include 'common.php';  // Include the common functions and configuration
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: index.php");
@@ -9,17 +9,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 $username = $_SESSION['username'];
 $user_id = $_SESSION['user_id'];
 
-include_once '../config/db_config.php';
-$conn = connect_db();
+$userObject = new User();
 
-$query = "SELECT u.id, u.username, u.profile_pic 
-          FROM users u
-          JOIN followers f ON u.id = f.followed_id
-          WHERE f.follower_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$followers = $userObject->getFollowers($user_id);
 ?>
 
 <!DOCTYPE html>
@@ -51,12 +43,12 @@ $result = $stmt->get_result();
                     <input type="text" placeholder="Search">
                 </div>
                 <ul>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php foreach ($followers as $row): ?>
                         <li data-user-id="<?php echo $row['id']; ?>">
                             <img src="<?php echo htmlspecialchars($row['profile_pic']); ?>" alt="Profile Picture">
                             <span><?php echo htmlspecialchars($row['username']); ?></span>
                         </li>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </ul>
             </div>
             <div class="chat-box">
@@ -78,4 +70,3 @@ $result = $stmt->get_result();
     <script src="js/sidebar.js"></script>
 </body>
 </html>
-

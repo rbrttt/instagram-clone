@@ -1,14 +1,8 @@
 <?php
 
-session_start(); // Start session
-$pageTitle = 'Signup'; 
-include 'header.php';  
-include_once '../config/auth.php';
-
-// Function to sanitize input
-function sanitize_input($data) {
-    return htmlspecialchars(trim($data));
-}
+include 'common.php';  // Include the common functions and configuration
+$pageTitle = 'Signup';
+$user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs
@@ -26,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Register user
-    $message = register($fullname, $username, $password, $email);
+    $message = $user->register($fullname, $username, $password, $email);
     $_SESSION['message'] = $message;
     if ($message == 'Registration successful! Login now.') {
         header('Location: index.php');

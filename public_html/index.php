@@ -1,15 +1,8 @@
 <?php 
-$pageTitle = 'Login'; 
-include 'header.php';
+include 'common.php';  // Include the common functions and configuration
+$pageTitle = 'Login';
 
-session_start();  // Start the session at the beginning
-
-include_once '../config/auth.php';
-
-// Function to sanitize input
-function sanitize_input($data) {
-    return htmlspecialchars(trim($data));
-}
+$user = new User();
 
 // Display the success message if it's set
 if (isset($_SESSION['message'])) {
@@ -31,11 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Login user
-    $message = login($username, $password);
+    $message = $user->login($username, $password);
     $_SESSION['message'] = $message;
     if ($message == 'Successfully logged in!') {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;  // Store the username in the session
+        $userData = $user->getUserDataByUsername($username);
+        $_SESSION['user_id'] = $userData['id'];  // Ensure user_id is set
         header('Location: dashboard.php');  // Redirect to the dashboard page
         exit;
     } else {
