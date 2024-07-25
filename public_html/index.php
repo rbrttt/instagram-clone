@@ -3,6 +3,7 @@ include 'common.php';  // Include the common functions and configuration
 $pageTitle = 'Login';
 
 require_once '../config/auth.php'; // Include auth functions
+// require_once '../autoload/User.php'; // Manually include the User class
 
 // Display the success message if it's set
 if (isset($_SESSION['message'])) {
@@ -12,11 +13,11 @@ if (isset($_SESSION['message'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs
-    $username = sanitize_input($_POST['username']);
+    $usernameOrEmail = sanitize_input($_POST['username']);
     $password = sanitize_input($_POST['password']);
     
     // Validate inputs
-    if (empty($username) || empty($password)) {
+    if (empty($usernameOrEmail) || empty($password)) {
         $_SESSION['message'] = 'Both username and password are required.';
         $_SESSION['form_data'] = $_POST;
         header('Location: index.php');
@@ -24,13 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Login user
-    $message = login($username, $password);
+    $message = login($usernameOrEmail, $password);
     $_SESSION['message'] = $message;
     if ($message == 'Successfully logged in!') {
         $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;  // Store the username in the session
         $user = new User();
-        $userData = $user->getUserDataByUsername($username);
+        // Fetch user data using the username stored in the session
+        $userData = $user->getUserDataByUsername($_SESSION['username']);
         $_SESSION['user_id'] = $userData['id'];  // Ensure user_id is set
         header('Location: dashboard.php');  // Redirect to the dashboard page
         exit;

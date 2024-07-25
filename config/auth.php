@@ -74,7 +74,9 @@ function login($usernameOrEmail, $password) {
                 }
 
                 // Password is correct, start a new session
-                session_start();
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $user['username'];  // Use the username from the database
                 $_SESSION['user_id'] = $user['id'];  // Store user ID in session for easier reference
