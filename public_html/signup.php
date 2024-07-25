@@ -1,8 +1,9 @@
 <?php
 
 include 'common.php';  // Include the common functions and configuration
+require_once '../config/auth.php';  // Include the authentication functions
+
 $pageTitle = 'Signup';
-$user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Register user
-    $message = $user->register($fullname, $username, $password, $email);
+    $message = register($fullname, $username, $password, $email);
     $_SESSION['message'] = $message;
     if ($message == 'Registration successful! Login now.') {
         header('Location: index.php');
@@ -30,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     exit;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -2,7 +2,7 @@
 include 'common.php';  // Include the common functions and configuration
 $pageTitle = 'Login';
 
-$user = new User();
+require_once '../config/auth.php'; // Include auth functions
 
 // Display the success message if it's set
 if (isset($_SESSION['message'])) {
@@ -24,11 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Login user
-    $message = $user->login($username, $password);
+    $message = login($username, $password);
     $_SESSION['message'] = $message;
     if ($message == 'Successfully logged in!') {
         $_SESSION['loggedin'] = true;
         $_SESSION['username'] = $username;  // Store the username in the session
+        $user = new User();
         $userData = $user->getUserDataByUsername($username);
         $_SESSION['user_id'] = $userData['id'];  // Ensure user_id is set
         header('Location: dashboard.php');  // Redirect to the dashboard page
@@ -80,6 +81,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="input-group">
                     <a href="forgot_password.php" class="forgot-password">Forgot password?</a>
+                </div>
+                <div class="input-group">
+                    <a href="admin/admin_index.html" class="forgot-password">Admin Page</a>
                 </div>
                 <div class="input-group">
                     <p>Don't have an account? <a href="signup.php">Sign Up</a></p>
