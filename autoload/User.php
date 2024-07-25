@@ -7,51 +7,6 @@ class User {
         $this->db = connect_db(); // Use the connect_db function from config.php
     }
 
-    public function register($fullname, $username, $password, $email) {
-        global $CFG;
-        
-        // Check if username or email already exists
-        $stmt = $this->db->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
-        if ($stmt->rowCount() > 0) {
-            return 'Username or email already exists.';
-        }
-
-        // Hash the password with the site-wide salt
-        $hashed_password = password_hash($password . $CFG->site_wide_password_salt, PASSWORD_DEFAULT);
-
-        // Insert the new user into the database
-        $stmt = $this->db->prepare("INSERT INTO users (fullname, username, password, email) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$fullname, $username, $hashed_password, $email])) {
-            return 'Registration successful! Login now.';
-        } else {
-            return 'Registration failed. Please try again.';
-        }
-    }
-
-    public function login($username, $password) {
-        global $CFG;
-        
-        // Fetch user by username or email
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        if ($user) {
-            // Check if the password hash includes the site-wide salt
-            if (password_verify($password, $user['password']) || password_verify($password . $CFG->site_wide_password_salt, $user['password'])) {
-                // Rehash the password with the site-wide salt if needed
-                if (!password_verify($password . $CFG->site_wide_password_salt, $user['password'])) {
-                    $new_hashed_password = password_hash($password . $CFG->site_wide_password_salt, PASSWORD_DEFAULT);
-                    $update_stmt = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
-                    $update_stmt->execute([$new_hashed_password, $user['id']]);
-                }
-                return 'Successfully logged in!';
-            }
-        }
-        return 'Invalid username or password.';
-    }
-
     public function getAllUsers() {
         $stmt = $this->db->prepare("SELECT username FROM users");
         $stmt->execute();

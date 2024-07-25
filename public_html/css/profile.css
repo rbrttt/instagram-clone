@@ -14,6 +14,7 @@ body {
 .container {
     width: 80%; /* Increased width for more space */
     max-width: 1200px; /* Increased max-width */
+    min-width: 600px; /* Ensure the container has a minimum width */
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
