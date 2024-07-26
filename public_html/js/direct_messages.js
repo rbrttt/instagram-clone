@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatHeader = document.querySelector('.chat-header h3');
     const searchInput = document.querySelector('.search-bar input');
     let currentChatUserId = null;
+    let lastMessageId = 0; // Track the last message ID for polling
 
     const users = document.querySelectorAll('.users-list ul li');
     const userList = document.querySelector('.users-list ul');
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadMessages(userId) {
         if (isDebugging) console.log(`Loading messages for user ID: ${userId}`);
+        lastMessageId = 0; // Reset lastMessageId when loading new conversation
         fetch('get_messages.php', {
             method: 'POST',
             headers: {
@@ -64,27 +66,29 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                if (isDebugging) console.log('Messages loaded successfully');
                 chatContent.innerHTML = '';
                 data.messages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
-                    if (message.sender_id === currentUserId) {
-                        messageElement.classList.add('sent');
-                    } else {
-                        messageElement.classList.add('received');
-                    }
-                    const profilePic = `<img src="${message.sender_profile_pic}" alt="Profile Picture">`;
-                    messageElement.innerHTML = `${profilePic} ${message.sender_name}: ${message.message}`;
-                    chatContent.appendChild(messageElement);
+                    appendMessage(message);
                 });
                 scrollToBottom();
-            } else {
-                if (isDebugging) console.error('Failed to load messages:', data.message);
+                startPolling(); // Start polling for new messages
             }
-        }).catch(error => {
-            if (isDebugging) console.error('Error loading messages:', error);
-        });
+        })
+        .catch(error => console.error('Error loading messages:', error));
+    }
+
+    function appendMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        if (message.sender_id === currentUserId) {
+            messageElement.classList.add('sent');
+        } else {
+            messageElement.classList.add('received');
+        }
+        const profilePic = `<img src="${message.sender_profile_pic}" alt="Profile Picture">`;
+        messageElement.innerHTML = `${profilePic} ${message.sender_name}: ${message.message}`;
+        chatContent.appendChild(messageElement);
+        lastMessageId = message.id; // Update last message ID
     }
 
     function sendMessage(receiverId, message) {
@@ -99,14 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                if (isDebugging) console.log('Message sent successfully');
-                loadMessages(receiverId);
-            } else {
-                if (isDebugging) console.error('Failed to send message:', data.message);
+                loadMessages(receiverId); // Reload messages to include the new one
             }
-        }).catch(error => {
-            if (isDebugging) console.error('Error sending message:', error);
-        });
+        })
+        .catch(error => console.error('Error sending message:', error));
     }
 
     function updateChatHeader(username) {
@@ -127,5 +127,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToBottom() {
         chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    function startPolling() {
+        if (currentChatUserId) {
+            setTimeout(function() {
+                pollNewMessages(currentChatUserId, lastMessageId);
+            }, 5000); // Poll every 5 seconds
+        }
+    }
+
+    function pollNewMessages(userId, lastMessageId) {
+        fetch('get_messages.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ contact_id: userId, last_message_id: lastMessageId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                data.messages.forEach(message => {
+                    appendMessage(message);
+                });
+                scrollToBottom();
+            }
+            startPolling(); // Continue polling
+        })
+        .catch(error => {
+            console.error('Error polling new messages:', error);
+            startPolling(); // Continue polling even if there is an error
+        });
     }
 });
