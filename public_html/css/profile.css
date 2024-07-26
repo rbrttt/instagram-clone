@@ -1,25 +1,32 @@
-body {
+html, body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100%;
+    overflow-y: auto; /* Ensure vertical scrolling for the whole page */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    overflow: hidden; /* Prevent scrolling */
+    min-height: 100vh; /* Ensure body takes at least the full viewport height */
 }
 
 .container {
-    width: 80%; /* Increased width for more space */
-    max-width: 1200px; /* Increased max-width */
-    min-width: 600px; /* Ensure the container has a minimum width */
+    width: 80%;
+    max-width: 1200px;
+    min-width: 600px;
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    overflow-y: auto; /* Enable scrolling within the container if needed */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+    overflow: hidden; /* Ensure container handles overflow correctly */
 }
 
 .profile-header {
@@ -73,12 +80,63 @@ body {
     display: block;
 }
 
+.posts-container {
+    width: 100%;
+    max-height: calc(100vh - 500px); /* Adjust this value as needed to fit within the viewport */
+    overflow-y: auto; /* Enable vertical scrolling within the post box */
+    margin-bottom: 20px;
+}
+
 .profile-posts {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .no-posts {
     color: #888;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Grid with 3 columns */
+    gap: 20px; /* Adjust gap as needed */
+}
+
+.post {
+    position: relative;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.post img {
+    width: 100%;
+    height: 200px; /* Fixed height for images */
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.delete-post-form {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.post:hover .delete-post-form {
+    display: block;
+}
+
+.delete-post-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.post-image-container {
+    position: relative;
 }
 
 .modal {
@@ -157,76 +215,4 @@ body {
 
 .nav-buttons a:hover {
     color: #0095f6;
-}
-
-.post-box {
-    margin: 20px 0;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fafafa;
-}
-
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Grid with 3 columns */
-    gap: 20px; /* Adjust gap as needed */
-}
-
-.post {
-    position: relative;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-.post img {
-    width: 100%;
-    height: 200px; /* Fixed height for images */
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.post .delete-post-form {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.post:hover .delete-post-form {
-    display: block;
-}
-
-.delete-post-btn {
-    background: none;
-    border: none;
-    color: red;
-    cursor: pointer;
-    font-size: 1.2em;
-}
-
-.post-image-container {
-    position: relative;
-}
-
-/* Delete post button */
-.delete-post-form {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: none;
-}
-
-/* Show delete button on hover */
-.post-image-container:hover .delete-post-form {
-    display: block;
-}
-
-.delete-post-btn {
-    background: none;
-    border: none;
-    color: red;
-    cursor: pointer;
-    font-size: 20px;
 }
