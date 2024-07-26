@@ -103,31 +103,35 @@ if ($username !== $_SESSION['username']) {
                 </div>
             </div>
             <hr>
-            <div class="profile-posts">
-                <?php if (empty($posts)): ?>
-                    <p class="no-posts">No posts yet</p>
-                <?php else: ?>
-                    <div class="post-grid">
-                        <?php foreach ($posts as $post): ?>
-                            <div class="post">
-                                <div class="post-image-container">
-                                    <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
-                                    <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
-                                        <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                            <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
-                                            <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
-                                        </form>
-                                    <?php endif; ?>
+            <div class="posts-container">
+                <div class="profile-posts">
+                    <?php if (empty($posts)): ?>
+                        <p class="no-posts">No posts yet</p>
+                    <?php else: ?>
+                        <div class="post-grid">
+                            <?php foreach ($posts as $post): ?>
+                                <div class="post">
+                                    <div class="post-image-container">
+                                        <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image">
+                                        <?php if ($username === $_SESSION['username']): // Show Delete button only for the logged-in user ?>
+                                            <form action="delete_post.php" method="POST" class="delete-post-form" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                                <input type="hidden" name="post_id" value="<?php echo $post['id']; ?>">
+                                                <button type="submit" class="delete-post-btn"><i class="fas fa-trash-alt"></i></button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p><?php echo htmlspecialchars($post['caption']); ?></p>
                                 </div>
-                                <p><?php echo htmlspecialchars($post['caption']); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-                <?php if ($username === $_SESSION['username']): // Show Create Post button only for the logged-in user ?>
-                    <button class="action-btn" id="createPostBtn">Create Post</button>
-                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
+            <?php if ($username === $_SESSION['username']): // Show Create Post button only for the logged-in user ?>
+                <div class="profile-actions">
+                    <button class="action-btn" id="createPostBtn">Create Post</button>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
